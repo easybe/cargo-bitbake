@@ -341,10 +341,12 @@ fn real_main(options: Args, config: &mut Config) -> CliResult {
     let mut lic_files = vec![];
     let licenses: Vec<&str> = license.split('/').collect();
     let single_license = licenses.len() == 1;
+    let license_path = metadata.license_file.as_ref().map(|s| Path::new(s));
+
     for lic in licenses {
         lic_files.push(format!(
             "    {}",
-            license::file(crate_root, &rel_dir, lic, single_license)
+            license::file(crate_root, &rel_dir, lic, license_path, single_license)
         ));
     }
 

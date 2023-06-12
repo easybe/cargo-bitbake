@@ -162,6 +162,7 @@ dependencies = [
  "itertools",
  "lazy_static",
  "md5",
+ "path-dedot",
  "regex",
  "structopt",
 ]
@@ -857,6 +858,15 @@ name = "os_str_bytes"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e22443d1643a904602595ba1cd8f7d896afe56d26712531c5ff73a15b2fbf64"
+
+[[package]]
+name = "path-dedot"
+version = "3.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d55e486337acb9973cdea3ec5638c1b3bcb22e573b2b7b41969e0c744d5a15e"
+dependencies = [
+ "once_cell",
+]
 
 [[package]]
 name = "percent-encoding"
