@@ -9,6 +9,7 @@
  */
 
 use md5::Context;
+use path_dedot::ParseDot;
 use std::fs::File;
 use std::io;
 use std::path::Path;
@@ -26,7 +27,13 @@ fn file_md5<P: AsRef<Path>>(license_file: P) -> Result<String, io::Error> {
 
 /// Given the top level of the crate at `crate_root`, attempt to find
 /// the license file based on the name of the license in `license_name`.
-pub fn file(crate_root: &Path, rel_dir: &Path, license_name: &str, single_license: bool) -> String {
+pub fn file(
+    crate_root: &Path,
+    rel_dir: &Path,
+    license_name: &str,
+    license_path: Option<&Path>,
+    single_license: bool,
+) -> String {
     // CLOSED is a special case license (case sensitive) per
     // http://www.yoctoproject.org/docs/2.3.2/mega-manual/mega-manual.html#sdk-license-detection
     // that means this is closed source and there is no license
@@ -46,8 +53,16 @@ pub fn file(crate_root: &Path, rel_dir: &Path, license_name: &str, single_licens
     let lic_abs_path = crate_root.join(lic_path);
     let spec_abs_path = crate_root.join(spec_path);
     let simple_abs_path = crate_root.join(simple_path);
+    let custom_abs_path = crate_root.join(license_path.unwrap_or(Path::new("")));
 
-    if lic_abs_path.exists() {
+    if license_path.is_some() && custom_abs_path.exists() {
+        let md5sum = file_md5(custom_abs_path).unwrap_or_else(|_| String::from("generateme"));
+        format!(
+            "file://{};md5={} \\\n",
+            rel_dir.join(license_path.unwrap()).parse_dot().unwrap().display(),
+            md5sum
+        )
+    } else if lic_abs_path.exists() {
         let md5sum = file_md5(lic_abs_path).unwrap_or_else(|_| String::from("generateme"));
         format!(
             "file://{};md5={} \\\n",

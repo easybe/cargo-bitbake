@@ -35,10 +35,11 @@ On Debian/Ubuntu, the package librust-cargo+openssl-dev is required (available v
 
 ### LIC_FILES_CHKSUM
 
-`LIC_FILES_CHKSUM` is treated a bit specially. If the user specifies `package.license-file` then the
-filename is taken directly. If `package.license` is specified then it checks for the filename directly
-and falls back to checking `LICENSE-{license}`. If nothing can be found then you are expected to generate
-the md5sum yourself.
+`LIC_FILES_CHKSUM` is treated a bit specially. If the user specifies `package.license-file`, which
+can be a relative path, then that file is used. If only `package.license` is specified, either a
+file with the same name as the license, `LICENSE-{license}` or `LICENSE` should exist in the same
+directory as `Cargo.toml`. If no license file can be found, then you are expected to generate the
+MD5 checksum yourself.
 
 The license field supports any valid Cargo value and can be separated by `/` to specify multiple licenses.
 
